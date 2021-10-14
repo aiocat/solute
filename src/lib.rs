@@ -6,6 +6,7 @@ pub struct Avatar {
     pub nickname: String,
     pub hash: String,
     pub avatar_color: (u8, u8, u8),
+    pub background_color: (u8, u8, u8),
 }
 
 impl Avatar {
@@ -18,7 +19,12 @@ impl Avatar {
             nickname: nickname.to_owned(),
             hash: format!("{:x}", hash),
             avatar_color: (0, 0, 0),
+            background_color: (255, 255, 255),
         }
+    }
+
+    pub fn set_background_color(&mut self, r: u8, b: u8, g: u8) {
+        self.background_color = (r, g, b)
     }
 
     pub fn draw(&mut self, path: &str) {
@@ -50,9 +56,9 @@ impl Avatar {
                     })
                     .with_xy(width as f32, height as f32)
                     .with_style(Style::filled(RGB {
-                        r: 255,
-                        g: 255,
-                        b: 255,
+                        r: self.background_color.0,
+                        g: self.background_color.1,
+                        b: self.background_color.2,
                     }));
             }
         });
