@@ -1,10 +1,11 @@
-use sha2::{Sha224, Digest};
+use draw::*;
+use sha2::{Digest, Sha224};
+use std::str;
 
-#[derive(Debug)]
 pub struct Avatar {
     pub nickname: String,
     pub hash: String,
-    pub avatar_color: (u8, u8, u8)
+    pub avatar_color: (u8, u8, u8),
 }
 
 impl Avatar {
@@ -16,12 +17,51 @@ impl Avatar {
         Avatar {
             nickname: nickname.to_owned(),
             hash: format!("{:x}", hash),
-            avatar_color: (0, 0, 0)
+            avatar_color: (0, 0, 0),
         }
     }
 
-    pub fn draw(&mut self) {
+    pub fn draw(&mut self, path: &str) {
         self.initialize_avatar_color();
+        let chunked_substrs = split_string(&self.hash, 3);
+        let mut canvas = Canvas::new(200, 200);
+
+        let values = chunked_substrs.iter().enumerate().map(|(i, val)| {
+            let width = (i % 5) * 50;
+            let height = (i / 5) * 50;
+
+            if i32::from_str_radix(val, 16).unwrap() % 2 == 0 {
+                return Drawing::new()
+                    .with_shape(Shape::Rectangle {
+                        width: width as u32 + 50,
+                        height: height as u32 + 50,
+                    })
+                    .with_xy(width as f32, height as f32)
+                    .with_style(Style::filled(RGB {
+                        r: self.avatar_color.0,
+                        g: self.avatar_color.1,
+                        b: self.avatar_color.2,
+                    }));
+            } else {
+                return Drawing::new()
+                    .with_shape(Shape::Rectangle {
+                        width: width as u32 + 50,
+                        height: height as u32 + 50,
+                    })
+                    .with_xy(width as f32, height as f32)
+                    .with_style(Style::filled(RGB {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                    }));
+            }
+        });
+
+        for val in values {
+            canvas.display_list.add(val);
+        }
+
+        render::save(&canvas, path, SvgRenderer::new()).expect("Failed to save");
     }
 
     fn initialize_avatar_color(&mut self) {
@@ -36,4 +76,15 @@ fn hex_2_rgb(hex: &str) -> (u8, u8, u8) {
     let g = u8::from_str_radix(&hex[4..6], 16).unwrap();
 
     (r, g, b)
+}
+
+fn split_string(text: &String, chuck: usize) -> Vec<&str> {
+    let subs = text
+        .as_bytes()
+        .chunks(chuck)
+        .map(str::from_utf8)
+        .collect::<Result<Vec<&str>, _>>()
+        .unwrap();
+
+    subs
 }
