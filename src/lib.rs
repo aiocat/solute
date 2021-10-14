@@ -1,7 +1,12 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+#[derive(Debug)]
+pub struct Avatar {
+    pub nickname: String
+}
+
+impl Avatar {
+    pub fn new(nickname: &str) -> Avatar {
+        Avatar {
+            nickname: nickname.to_owned()
+        }
     }
 }
