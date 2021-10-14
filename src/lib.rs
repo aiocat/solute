@@ -107,7 +107,6 @@ impl Avatar {
     }
 
     fn initialize_avatar_color(&mut self) {
-        println!("{}", self.hash);
         self.avatar_color = hex_2_rgb(&self.hash[0..6]);
     }
 }
