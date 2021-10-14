@@ -2,6 +2,13 @@
 name = "solute"
 version = "0.1.0"
 edition = "2018"
+include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
+homepage = "https://gitlab.com/aiocat/solute"
+description = "Generate unique github-like avatars in Rust!"
+repository = "https://gitlab.com/aiocat/solute"
+keywords = ["avatar", "draw", "2d-graphics", "github-like"]
+authors = ["aiocat@protonmail.com"]
+license = "MIT"
 
 [dependencies]
 sha2 = "0.9.8"

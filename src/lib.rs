@@ -1,7 +1,8 @@
-use draw::*;
+use draw::{Drawing, Style, Shape, render, RGB, SvgRenderer, Canvas};
 use sha2::{Digest, Sha224};
 use std::str;
 
+/// Main struct for solute.
 pub struct Avatar {
     pub nickname: String,
     pub hash: String,
@@ -10,6 +11,17 @@ pub struct Avatar {
 }
 
 impl Avatar {
+    /// Create a new avatar struct.
+    ///
+    /// # Arguments
+    ///
+    /// * `nickname` (`&str`) - User nickname.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut avatar = solute::Avatar::new("aiocat");
+    /// ```
     pub fn new(nickname: &str) -> Avatar {
         let mut hasher = Sha224::new();
         hasher.update(nickname.as_bytes());
@@ -23,10 +35,34 @@ impl Avatar {
         }
     }
 
+    /// Set a background for avatar.
+    ///
+    /// # Arguments
+    ///
+    /// * `r` (`u8`) - Red color.
+    /// * `g` (`u8`) - Green color.
+    /// * `b` (`u8`) - Blue color.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// avatar.set_background_color(25, 50, 75);
+    /// ```
     pub fn set_background_color(&mut self, r: u8, b: u8, g: u8) {
         self.background_color = (r, g, b)
     }
 
+    /// Draw the avatar and save the svg to the path.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` (`&str`) - /path/to/save the svg file.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// avatar.draw("test.svg");
+    /// ```
     pub fn draw(&mut self, path: &str) {
         self.initialize_avatar_color();
         let chunked_substrs = split_string(&self.hash, 3);
